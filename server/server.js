@@ -1,41 +1,28 @@
 require('./config/config')
+
 const express = require('express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const app = express();
 
 app.set('port', process.env.PORT);
 
-//app.use(express.json())
-//app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json())
+app.use(express.json())
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/usuario', (req, res) => {
-    res.json('Petición GET')
+app.use(require('../server/routes/usuario'));
+mongoose.connect(process.env.URL_DB_CONEXION, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true
+
+}).then(res => {
+    console.log('Base de datos ONLINE');
+}).catch(err => {
+    console.log('Error de conexión');
 });
 
-app.post('/usuario', (req, res) => {
-
-    let data = req.body;
-    if (data.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            message: 'El nombre es necesario.'
-        })
-    } else {
-        res.json(data)
-    }
-});
-
-app.put('/usuario/:id', (req, res) => {
-    let id = req.params.id;
-    res.json('Petición PUT ' + id)
-});
-
-app.delete('/usuario/:id', (req, res) => {
-    let id = req.params.id;
-    res.json('Petición DELETE ' + id)
-});
 
 app.listen(app.get('port'), () => {
     console.log('Server on port', app.get('port'));
