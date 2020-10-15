@@ -20,7 +20,7 @@ let urlConexion;
 if (process.env.NODE_ENV === 'dev') {
     urlConexion = 'mongodb://localhost:27017/cafe';
 } else {
-    urlConexion = 'mongodb+srv://root28:root28@cluster0.jibtu.mongodb.net/cafe';
+    urlConexion = MONGO_URI;
 }
 
 process.env.URL_DB_CONEXION = urlConexion;
