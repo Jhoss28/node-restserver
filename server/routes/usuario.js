@@ -1,14 +1,20 @@
 const express = require('express');
-const Usuario = require('../models/usuario');
 const app = express();
 const _ = require('underscore');
 const bcrypt = require('bcrypt');
 
-app.get('/usuario', (req, res) => {
+const Usuario = require('../models/usuario');
+const { virifyToken, virifyRole } = require('../middlewares/autentication')
+
+app.get('/usuario', virifyToken, (req, res) => {
 
     let limite = Number(req.query.limite) || 6;
     let getPage = Number(req.query.page);
     let page = getPage > 0 ? ((getPage - 1) * limite) : 0;
+
+    /* return res.json({
+        usuario: req.usuario
+    }) */
 
     Usuario.find({ estado: true }, '-password')
         .skip(page)
@@ -20,7 +26,7 @@ app.get('/usuario', (req, res) => {
                     err: err
                 })
             }
-            Usuario.count({ estado: true }, (err, cont) => {
+            Usuario.countDocuments({ estado: true }, (err, cont) => {
                 res.json({
                     OK: true,
                     page: getPage,
@@ -35,7 +41,7 @@ app.get('/usuario', (req, res) => {
 
 });
 
-app.post('/usuario', (req, res) => {
+app.post('/usuario', [virifyToken, virifyRole], (req, res) => {
 
     let data = req.body;
     let usuario = new Usuario({
@@ -63,7 +69,7 @@ app.post('/usuario', (req, res) => {
 
 });
 
-app.put('/usuario/:id', (req, res) => {
+app.put('/usuario/:id', [virifyToken, virifyRole], (req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
@@ -83,7 +89,7 @@ app.put('/usuario/:id', (req, res) => {
 
 });
 
-app.delete('/usuario/:id', (req, res) => {
+app.delete('/usuario/:id', [virifyToken, virifyRole], (req, res) => {
     let id = req.params.id;
     let body = {
         estado: false
