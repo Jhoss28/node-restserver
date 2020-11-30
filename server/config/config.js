@@ -32,10 +32,11 @@ let urlConexion;
 
 if (process.env.NODE_ENV === 'dev') {
     urlConexion = 'mongodb://localhost:27017/cafe';
+    //urlConexion = 'mongodb+srv://root28:root28@cluster0.jibtu.mongodb.net/cafe';
 } else {
     urlConexion = process.env.MONGO_URI;
 }
-
+console.log(process.env.NODE_ENV);
 /**********************************
   Google Client ID
 **********************************/

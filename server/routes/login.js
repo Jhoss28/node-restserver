@@ -64,6 +64,17 @@ app.post('/login', (req, res) => {
 
 // Configuraciones de Google
 
+function _gethashJWT(dataUser) {
+    return {
+        iss: 'issuer_claim',
+        aud: 'audience_claim',
+        iat: Math.floor(Date.now() / 1000) - 30,
+        exp: Math.floor(Date.now() / 1000) + parseInt(process.env.CADUCIDAD_TOKEN),
+        data: dataUser
+    };
+
+}
+
 async function verify(token) {
     const ticket = await client.verifyIdToken({
         idToken: token,
@@ -80,16 +91,7 @@ async function verify(token) {
 
 }
 
-function _gethashJWT(dataUser) {
-    return {
-        iss: 'issuer_claim',
-        aud: 'audience_claim',
-        iat: Math.floor(Date.now() / 1000) - 30,
-        exp: Math.floor(Date.now() / 1000) + parseInt(process.env.CADUCIDAD_TOKEN),
-        data: dataUser
-    };
 
-}
 
 app.post('/google', async(req, res) => {
 
@@ -99,11 +101,9 @@ app.post('/google', async(req, res) => {
         .catch(e => {
             return res.status(403).json({
                 ok: false,
-                err: 'ERROR'
+                err: 'ERRORES'
             })
         });
-
-
 
     Usuario.findOne({ email: googleUser.email }, (err, usuarioDB) => {
 
