@@ -12,10 +12,6 @@ app.get('/usuario', virifyToken, (req, res) => {
     let getPage = Number(req.query.page);
     let page = getPage > 0 ? ((getPage - 1) * limite) : 0;
 
-    /* return res.json({
-        usuario: req.usuario
-    }) */
-
     Usuario.find({ estado: true }, '-password')
         .skip(page)
         .limit(limite)

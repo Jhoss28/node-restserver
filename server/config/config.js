@@ -36,11 +36,10 @@ if (process.env.NODE_ENV === 'dev') {
 } else {
     urlConexion = process.env.MONGO_URI;
 }
-console.log(process.env.NODE_ENV);
+process.env.URL_DB_CONEXION = urlConexion;
+
 /**********************************
   Google Client ID
 **********************************/
 
 process.env.CLIENT_ID = process.env.CLIENT_ID || '361226657318-24g2r7la4m9foble6mepm1ejqaifod9r.apps.googleusercontent.com';
-
-process.env.URL_DB_CONEXION = urlConexion;
