@@ -39,8 +39,30 @@ let virifyRole = (req, res, next) => {
 
 }
 
+let verifyTokenImg = (req, res, next) => {
+
+    let token = req.query.token;
+
+
+    jwt.verify(token, process.env.KEY_SECRET, (err, decoded) => {
+
+        if (err) {
+            return res.status(401).json({
+                ok: false,
+                err: {
+                    message: 'Token incorrecto'
+                }
+            })
+        }
+
+        req.usuario = decoded.data
+        next();
+    });
+}
+
 
 module.exports = {
     virifyToken,
-    virifyRole
+    virifyRole,
+    verifyTokenImg
 }
